@@ -12,6 +12,7 @@ from lxml import etree
 def main():
     ArgParser = argparse.ArgumentParser()
     ArgParser.add_argument('-p', '--playlist', help='Input path to an MPLS playlist', required=True)
+    ArgParser.add_argument('-d', '--dest', help='Output file folder', required=True)
     args = ArgParser.parse_args()
 
     def get_chapters(mpls):
@@ -71,7 +72,7 @@ def main():
                 ChapterFlagEnabled = etree.SubElement(ChapterAtom, "ChapterFlagEnabled")
                 ChapterFlagEnabled.text = "1"
             clip = file_with_chapter[0]["clip"]
-            with open(os.path.join(os.path.dirname(args.playlist), os.path.splitext(os.path.basename(args.playlist))[0] + "_" + clip.split('.')[0] + ".xml"), 'wb') as f:
+            with open(os.path.join(args.dest, os.path.splitext(os.path.basename(args.playlist))[0] + "_" + clip.split('.')[0] + ".xml"), 'wb') as f:
                 f.write(etree.tostring(Chapters, encoding='utf-8', doctype="<!DOCTYPE Tags SYSTEM \"matroskatags.dtd\">", xml_declaration=True, pretty_print=True))
             print("Extracted chapters for " + clip)
         print("Finished...")
